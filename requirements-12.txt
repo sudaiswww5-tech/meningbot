@@ -1,6 +1,4 @@
-python-telegram-bot==20.7
-deep-translator
-gTTS
-pydub
-openai-whisper
-requests
+pyTelegramBotAPI
+googletrans==4.0.0-rc1
+Flask
+
