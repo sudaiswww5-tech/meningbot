@@ -1,6 +1,6 @@
 import os
 import telebot
-from googletrans import Translator
+from deep_translator import GoogleTranslator
 from flask import Flask
 from threading import Thread
 
@@ -16,27 +16,34 @@ def run():
 
 Thread(target=run).start()
 
-# DIQQAT: Qo'shtirnoq ichiga o'zingizning bot tokeningizni yozing!
-BOT_TOKEN = "8251116644:AAHG_von0pdx5zcytFCcFjxP3DcmFfwDPkA" 
-
+# DIQQAT: Bu yerga o'zingizning bot tokeningizni yozing!
+BOT_TOKEN = "8251116644:AAHG_von0pdx5zcytFCcFjxP3DcmFfwDPkA
 bot = telebot.TeleBot(BOT_TOKEN)
-translator = Translator()
 
 @bot.message_handler(commands=['start', 'help'])
 def send_welcome(message):
-    bot.reply_to(message, "Salom! Men matnlarni tarjima qiluvchi botman. Menga xabar yuboring!")
+    bot.reply_to(message, "Salom! Men matnlarni avtomatik tarjima qiluvchi botman. Menga matn yuboring!")
 
 @bot.message_handler(func=lambda message: True)
 def translate_message(message):
     try:
         text_to_translate = message.text
-        detected = translator.detect(text_to_translate)
-        target_lang = 'en' if detected.lang == 'uz' else 'uz'
-        translated = translator.translate(text_to_translate, dest=target_lang)
-        bot.reply_to(message, translated.text)
+        
+        # Birinchi tilni aniqlab olamiz (agar xatolik bo'lsa, inglizcha deb hisoblaydi)
+        try:
+            detected_lang = GoogleTranslator().detect(text_to_translate)
+        except:
+            detected_lang = 'en'
+            
+        # Agar yozilgan matn o'zbekcha bo'lsa -> inglizchaga, boshqa tilda bo'lsa -> o'zbekchaga tarjima qiladi
+        target_lang = 'en' if detected_lang == 'uz' else 'uz'
+        
+        translated = GoogleTranslator(source='auto', target=target_lang).translate(text_to_translate)
+        bot.reply_to(message, translated)
     except Exception as e:
-        bot.reply_to(message, "Tarjimada xatolik bo'ldi.")
+        bot.reply_to(message, "Tarjimada kutilmagan xatolik bo'ldi.")
 
 if __name__ == '__main__':
     bot.infinity_polling()
+    
     
