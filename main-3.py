@@ -17,7 +17,7 @@ def run():
 Thread(target=run).start()
 
 # DIQQAT: Bu yerga o'zingizning bot tokeningizni yozing!
-BOT_TOKEN = "8251116644:AAHG_von0pdx5zcytFCcFjxP3DcmFfwDPkA
+BOT_TOKEN = "8251116644:AAHG_von0pdx5zcytFCcFjxP3DcmFfwDPkA"
 bot = telebot.TeleBot(BOT_TOKEN)
 
 @bot.message_handler(commands=['start', 'help'])
